@@ -26,7 +26,7 @@ public class Application  {
 
         c.aggiungiElemento(new DaTavolo(6,"Cluedo",1990,35,6,120));
 
-        
+
 
         System.out.println("Scegli quale operazione compiere e premi 0 per uscire");
         do {

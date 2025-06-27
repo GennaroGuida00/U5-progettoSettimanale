@@ -31,7 +31,6 @@ public class Collezione {
         int id = in.nextInt();
         in.nextLine();
 
-        int finalId = id;
         Optional<Gioco> stream= giochi.stream().filter(g->g.getId()==id).findFirst();
         if(stream.isPresent()) {
             System.out.println(stream.get());
@@ -45,7 +44,9 @@ public class Collezione {
         System.out.println("Inserisci il prezzo dell'elemento da cercare:");
         double prezzo = in.nextDouble();
         in.nextLine();
-        giochi.stream().filter(p->p.getPrezzo()<prezzo).forEach(System.out::println);
+        List<Gioco> risultati =giochi.stream().filter(p->p.getPrezzo()<prezzo).collect(Collectors.toList());
+        risultati.forEach(System.out::println);
+
 
     }
 
@@ -53,7 +54,8 @@ public class Collezione {
         System.out.println("Inserisci dei giocatori:");
         int giocatori = in.nextInt();
         in.nextLine();
-        giochi.stream().filter(g->g instanceof DaTavolo).map(g->(DaTavolo) g).filter(daTavolo -> daTavolo.getGiocatori()==giocatori).forEach(System.out::println);
+        List<Gioco> risultati =giochi.stream().filter(g->g instanceof DaTavolo).map(g->(DaTavolo) g).filter(daTavolo -> daTavolo.getGiocatori()==giocatori).collect(Collectors.toList());
+        risultati.forEach(System.out::println);
     }
 
     public void rimuoviElemento(){
@@ -69,36 +71,75 @@ public class Collezione {
     }
 
     public void aggiornaElemento() {
+
         System.out.println("Inserisci l'id dell'elemento da aggiornare:");
         int id = in.nextInt();
         in.nextLine();
-        Optional<Gioco> elementoTrovato = ricercaElemento();
+
+        Optional<Gioco> elementoTrovato = giochi.stream().filter(g -> g.getId() == id).findFirst();
 
         if (elementoTrovato.isPresent()) {
             Gioco elementoDaModficare = elementoTrovato.get();
 
             if (elementoDaModficare instanceof Videogioco) {
+                boolean input = false;
+
                 System.out.println("inserisci id");
-                elementoDaModficare.setId(in.nextInt());
-                in.nextLine();
+                while (!input) {
+                    try {
+                        elementoDaModficare.setId(in.nextInt());
+                        in.nextLine(); // consuma newline
+                        input = true;
+                    } catch (InputMismatchException e) {
+                        System.out.println("Errore: inserisci un id valido numerico");
+                        in.nextLine();
+                    }
+                }
 
+                input = false;
                 System.out.println("inserisci titolo");
-                elementoDaModficare.setTitolo(in.nextLine());
+                while (!input) {
+                    try {
+                        elementoDaModficare.setTitolo(in.nextLine());
+                        input = true;
+                    } catch (InputMismatchException e) {
+                        System.out.println("Errore: inserisci un titolo valido");
+                        in.nextLine();
+                    }
+                }
 
+                input = false;
                 System.out.println("inserisci Anno di pubblicazione");
-                elementoDaModficare.setAnnoPubblicazione(in.nextInt());
-                in.nextLine();
+                while (!input) {
+                    try {
+                        elementoDaModficare.setAnnoPubblicazione(in.nextInt());
+                        in.nextLine();
+                        input = true;
+                    } catch (InputMismatchException e) {
+                        System.out.println("Errore: inserisci un anno valido");
+                        in.nextLine();
+                    }
+                }
 
+                input = false;
                 System.out.println("inserisci prezzo");
-                elementoDaModficare.setPrezzo(in.nextDouble());
-                in.nextLine();
+                while (!input) {
+                    try {
+                        elementoDaModficare.setPrezzo(in.nextDouble());
+                        in.nextLine();
+                        input = true;
+                    } catch (InputMismatchException e) {
+                        System.out.println("Errore: inserisci un prezzo valido");
+                        in.nextLine();
+                    }
+                }
 
                 Piattaforma piattaforma = null;
                 do {
                     System.out.println("Inserisci piattaforma tra: PC, PS5, XBOX, SWITCH");
-                    String input = in.nextLine().toUpperCase();
+                    String inputP = in.nextLine().toUpperCase();
                     try {
-                        piattaforma = Piattaforma.valueOf(input);
+                        piattaforma = Piattaforma.valueOf(inputP);
                     } catch (IllegalArgumentException e) {
                         System.out.println("Piattaforma non valida, riprova.");
                     }
@@ -113,9 +154,9 @@ public class Collezione {
                 Genere genere = null;
                 do {
                     System.out.println("Inserisci genere tra: SPORT, AZIONE, AVVENTURA, HORROR");
-                    String input = in.nextLine().toUpperCase();
+                    String inputP = in.nextLine().toUpperCase();
                     try {
-                        genere = Genere.valueOf(input);
+                        genere = Genere.valueOf(inputP);
                     } catch (IllegalArgumentException e) {
                         System.out.println("Genere non valido, riprova.");
                     }
@@ -125,40 +166,50 @@ public class Collezione {
             }
 
             if (elementoDaModficare instanceof DaTavolo) {
+                boolean input = false;
+
                 System.out.println("inserisci id");
-                elementoDaModficare.setId(in.nextInt());
-                in.nextLine();
+                while (!input) {
+                    try {
+                        elementoDaModficare.setId(in.nextInt());
+                        in.nextLine();
+                        input = true;
+                    } catch (InputMismatchException e) {
+                        System.out.println("Errore: inserisci un id valido numerico");
+                        in.nextLine();
+                    }
+                }
 
+                input = false;
                 System.out.println("inserisci titolo");
-                elementoDaModficare.setTitolo(in.nextLine());
+                while (!input) {
+                    try {
+                        elementoDaModficare.setTitolo(in.nextLine());
+                        input = true;
+                    } catch (InputMismatchException e) {
+                        System.out.println("Errore: inserisci un titolo valido");
+                        in.nextLine();
+                    }
+                }
 
+                input = false;
                 System.out.println("inserisci Anno di pubblicazione");
-                elementoDaModficare.setAnnoPubblicazione(in.nextInt());
-                in.nextLine();
-
-                System.out.println("inserisci prezzo");
-                elementoDaModficare.setPrezzo(in.nextDouble());
-                in.nextLine();
-
-                System.out.println("inserisci durata in minuti");
-                ((DaTavolo) elementoDaModficare).setDurataM(in.nextInt());
-                in.nextLine();
-
-                System.out.println("inserisci numero giocatori");
-                ((DaTavolo) elementoDaModficare).setGiocatori(in.nextInt());
-                in.nextLine();
+                while (!input) {
+                    try {
+                        elementoDaModficare.setAnnoPubblicazione(in.nextInt());
+                        in.nextLine();
+                        input = true;
+                    } catch (InputMismatchException e) {
+                        System.out.println("Errore: inserisci un anno valido");
+                        in.nextLine();
+                    }
+                }
             }
-
-
-            System.out.println("Elemento aggiornato:");
-            System.out.println(elementoDaModficare);
-
-        } else {
-            System.out.println("Elemento non trovato.");
         }
     }
 
-    public void statistiche(){
+
+                    public void statistiche(){
         DoubleSummaryStatistics stats=  giochi.stream()
                 .collect(Collectors.summarizingDouble(Gioco::getPrezzo));
         System.out.println("Numero Elementi:" +stats.getCount());
