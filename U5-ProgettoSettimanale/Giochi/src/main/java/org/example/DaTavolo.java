@@ -1,6 +1,6 @@
 package org.example;
 
-public class DaTavolo extends Giochi{
+public class DaTavolo extends Gioco {
 
     protected int giocatori;
     protected int durataM;
@@ -26,5 +26,17 @@ public class DaTavolo extends Giochi{
 
     public void setDurataM(int durataM) {
         this.durataM = durataM;
+    }
+
+    @Override
+    public String toString() {
+        return "DaTavolo{" +
+                "giocatori=" + giocatori +
+                ", durataM=" + durataM +
+                ", id=" + id +
+                ", titolo='" + titolo + '\'' +
+                ", annoPubblicazione=" + annoPubblicazione +
+                ", prezzo=" + prezzo +
+                '}';
     }
 }
