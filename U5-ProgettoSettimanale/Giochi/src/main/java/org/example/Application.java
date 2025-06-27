@@ -25,6 +25,12 @@ public class Application {
 
         c.ricercaPerPrezzo(70.0);
 
+        c.ricercaPerGiocatori(6);
+        System.out.println("----------------------------------------------------------------");
+        c.rimuoviElemento(4);
+
+        c.aggiornaElemento(5);
+
 
     }
 }
