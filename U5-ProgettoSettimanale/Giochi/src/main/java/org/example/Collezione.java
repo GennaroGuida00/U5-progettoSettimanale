@@ -3,10 +3,9 @@ package org.example;
 import org.example.Enum.Genere;
 import org.example.Enum.Piattaforma;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Scanner;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 public class Collezione {
@@ -15,17 +14,24 @@ public class Collezione {
 
     public void aggiungiElemento(Gioco g) {
 
+        Stream<Gioco> listid=giochi.stream().filter(l->l.getId()==g.getId());
+        if (listid.count()>0){
+            System.out.println("Elemento con quest'id già presente");
+        }
+        else {
+            giochi.add(g);
+            System.out.println("elemento aggiunto");
+        }
 
-      if(!giochi.contains(g)) {
-          giochi.add(g);
-          System.out.println("Elemento aggiunto");
-      }
-      else
-          System.out.println("Elemento già presente");
+
     }
 
-    public Optional<Gioco> ricercaElemento(int id) {
+    public Optional<Gioco> ricercaElemento() {
+        System.out.println("Inserisci l'id dell'elemento da cercare:");
+        int id = in.nextInt();
+        in.nextLine();
 
+        int finalId = id;
         Optional<Gioco> stream= giochi.stream().filter(g->g.getId()==id).findFirst();
         if(stream.isPresent()) {
             System.out.println(stream.get());
@@ -35,22 +41,38 @@ public class Collezione {
         return stream;
     }
 
-    public void ricercaPerPrezzo(Double prezzo){
+    public void ricercaPerPrezzo(){
+        System.out.println("Inserisci il prezzo dell'elemento da cercare:");
+        double prezzo = in.nextDouble();
+        in.nextLine();
         giochi.stream().filter(p->p.getPrezzo()<prezzo).forEach(System.out::println);
 
     }
 
-    public void ricercaPerGiocatori(int giocatori){
+    public void ricercaPerGiocatori(){
+        System.out.println("Inserisci dei giocatori:");
+        int giocatori = in.nextInt();
+        in.nextLine();
         giochi.stream().filter(g->g instanceof DaTavolo).map(g->(DaTavolo) g).filter(daTavolo -> daTavolo.getGiocatori()==giocatori).forEach(System.out::println);
     }
 
-    public void rimuoviElemento(int id){
-        giochi.remove(id-1);
-        giochi.forEach(System.out::println);
+    public void rimuoviElemento(){
+        System.out.println("Inserisci l'id dell'elemento da eliminare:");
+        int id = in.nextInt();
+        in.nextLine();
+        boolean eliminare= giochi.removeIf(e->e.getId()==id);
+        if (eliminare)
+            System.out.println("Elemento eliminato");
+        else
+            System.out.println("non presente");
+
     }
 
-    public void aggiornaElemento(int id) {
-        Optional<Gioco> elementoTrovato = ricercaElemento(id);
+    public void aggiornaElemento() {
+        System.out.println("Inserisci l'id dell'elemento da aggiornare:");
+        int id = in.nextInt();
+        in.nextLine();
+        Optional<Gioco> elementoTrovato = ricercaElemento();
 
         if (elementoTrovato.isPresent()) {
             Gioco elementoDaModficare = elementoTrovato.get();
@@ -137,9 +159,16 @@ public class Collezione {
     }
 
     public void statistiche(){
-        giochi.stream()
+        DoubleSummaryStatistics stats=  giochi.stream()
+                .collect(Collectors.summarizingDouble(Gioco::getPrezzo));
+        System.out.println("Numero Elementi:" +stats.getCount());
+        System.out.println("Prezzo più alto:" +stats.getMax());
+        System.out.println("Prezzo medio:" +stats.getAverage());
+
     }
 
+    public void stampaElementi(){
+giochi.stream().forEach(System.out::println);    }
 
 }
 
